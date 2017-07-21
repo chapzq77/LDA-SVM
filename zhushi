@@ -1,0 +1,42 @@
+"""
+注释文本的整理
+"""
+
+        """
+        '''
+        会出现警告：还没找出原因？
+        '''
+        skf = StratifiedKFold(n_splits =2)
+        for train_index,test_index in skf.split(numpy_matrix,target):
+            print "TRAIN:", train_index, "TEST:", test_index
+            X_train, X_test = numpy_matrix[train_index], numpy_matrix[test_index]
+            y_train, y_test = target[train_index], target[test_index]
+
+        kf = KFold(n_splits=2)
+        for train_index, test_index in kf.split(numpy_matrix):
+            #print("TRAIN:", train_index, "TEST:", test_index)
+            X_train, X_test = numpy_matrix[train_index], numpy_matrix[test_index]
+            y_train, y_test = target[train_index], target[test_index]
+
+            C_range =range(1,11)
+            gamma_list=[0.125, 0.25, 0.5 ,1, 2, 4]
+            penalty_range=['l1','l2']
+            param_grid=dict(C=C_range,penalty=penalty_range,gamma =gamma_list)
+            SVM = LinearSVC(C=1,penalty="l1",dual=False,tol=1e-4)
+            grid = GridSearchCV(SVM,param_grid,cv=2)
+            grid.fit(X_train,y_train)
+            cv_result = pd.DataFrame.from_dict(grid.cv_results_)
+            with open('param_result.csv','w') as f:
+                cv_result.to_csv(f)
+            #print grid.grid_scores_
+            print grid.best_params_
+            """
+            """
+            SVM.fit(X_train,y_train)
+            predict_test = SVM.predict(X_test)
+            calculate_3result(y_test,predict_test)
+        """
+            """
+            m_precision = metrics.accuracy_score(y_test,predict_test)
+            print "准确率：",m_precision
+            """
